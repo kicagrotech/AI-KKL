@@ -173,7 +173,9 @@
         const KKLInnovationMonth = () => {
             const [selectedWorkshop, setSelectedWorkshop] = useState(null);
             const registrationLink = "https://forms.gle/HfXYAewwxAFuNNp49";
-            const kklLogoUrl = "https://upload.wikimedia.org/wikipedia/he/thumb/2/27/KakalLogo.svg/250px-KakalLogo.svg.png";
+            // Updated Logo URL to Wikimedia source for better transparency handling, or revert to cloud if preferred.
+            // Using the Cloudinary one but ensuring we handle the background with CSS.
+            const kklLogoUrl = "https://res.cloudinary.com/dhzuwoech/image/upload/v1771425452/KakalLogo.svg_lxtqlq.png";
 
             const colors = {
                 blue: '#0072CE',    
@@ -338,9 +340,13 @@
                 <div className="min-h-screen pb-12">
                     
                     {/* Navbar */}
-                    <nav className="fixed w-full z-40 bg-[#0f172a]/80 backdrop-blur-md border-b border-white/10">
+                    <nav className="fixed w-full z-40 bg-[#0f172a]/95 backdrop-blur-md border-b border-white/10 shadow-lg">
                         <div className="container mx-auto px-6 py-3 flex justify-between items-center">
-                            <img src={kklLogoUrl} alt="KKL Logo" className="h-10 w-auto brightness-0 invert opacity-90" />
+                            {/* Logo in White Container for Visibility */}
+                            <div className="bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
+                                <img src={kklLogoUrl} alt="KKL Logo" className="h-8 w-auto" />
+                            </div>
+                            
                             <a href={registrationLink} target="_blank" className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-5 py-2 rounded-full text-sm font-bold hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition flex items-center gap-2">
                                 שריינו מקום
                                 <ArrowLeft className="w-4 h-4" />
@@ -355,9 +361,10 @@
 
                         <div className="container mx-auto px-6 relative z-10 text-center">
                             
+                            {/* Main Logo Container - FIXED */}
                             <div className="flex justify-center mb-8">
-                                <div className="glass-card p-4 rounded-2xl flex items-center justify-center">
-                                    <img src={kklLogoUrl} alt="KKL Logo" className="h-16 w-auto brightness-0 invert opacity-90" />
+                                <div className="bg-white p-6 rounded-3xl shadow-[0_0_40px_rgba(255,255,255,0.1)] flex items-center justify-center transform hover:scale-105 transition duration-500">
+                                    <img src={kklLogoUrl} alt="KKL Logo" className="h-20 w-auto" />
                                 </div>
                             </div>
 
@@ -454,8 +461,11 @@
 
                     {/* Footer */}
                     <footer className="text-center py-12 border-t border-white/10 text-slate-400 text-sm">
-                        <img src={kklLogoUrl} alt="KKL" className="h-8 mx-auto mb-4 brightness-0 invert opacity-50" />
-                        © כל הזכויות שמורות לקרן קימת לישראל
+                        {/* Footer Logo in White Box */}
+                        <div className="inline-block bg-white/90 p-3 rounded-xl mb-4">
+                             <img src={kklLogoUrl} alt="KKL" className="h-8 mx-auto" />
+                        </div>
+                        <div>© כל הזכויות שמורות לקרן קימת לישראל</div>
                     </footer>
 
                     {/* Modal */}
