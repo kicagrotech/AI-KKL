@@ -15,23 +15,110 @@
         .spring-gradient {
             background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
         }
-        /* התאמה אישית ללוח שנה */
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background-color: #e2e8f0;
-            border: 1px solid #e2e8f0;
-            border-radius: 1rem;
-            overflow: hidden;
-        }
-        .calendar-cell {
+        
+        /* לוגיקה ללוח שנה רספונסיבי */
+        .calendar-wrapper {
             background-color: white;
-            min-height: 100px;
+            padding: 1rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            border: 1px solid #f1f5f9;
         }
-        @media (max-width: 768px) {
+
+        /* --- תצוגת דסקטופ (רגילה) --- */
+        @media (min-width: 768px) {
+            .calendar-header-row {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+            .calendar-grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 1px;
+                background-color: #e2e8f0;
+                border: 1px solid #e2e8f0;
+                border-radius: 1rem;
+                overflow: hidden;
+            }
             .calendar-cell {
-                min-height: 80px;
+                background-color: white;
+                min-height: 120px;
+                padding: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                transition: all 0.2s;
+            }
+            .calendar-cell:hover {
+                background-color: #f8fafc;
+            }
+            .calendar-cell.empty {
+                background-color: #f8fafc;
+            }
+            /* אלמנטים שרואים רק במובייל */
+            .mobile-view-content {
+                display: none;
+            }
+        }
+
+        /* --- תצוגת מובייל --- */
+        @media (max-width: 767px) {
+            .calendar-wrapper {
+                padding: 0.5rem;
+                background: none;
+                box-shadow: none;
+                border: none;
+            }
+            .calendar-header-row {
+                display: none; /* מסתירים את ימות השבוע במובייל */
+            }
+            .calendar-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                background: none;
+                border: none;
+            }
+            .calendar-cell {
+                background-color: white;
+                border-radius: 0.75rem;
+                border: 1px solid #e2e8f0;
+                padding: 0.75rem;
+                display: flex;
+                align-items: center;
+                min-height: 40px; /* גובה ברירת מחדל לימים ריקים */
+            }
+            
+            /* ימים ריקים (padding) מתחילת החודש - נסתיר אותם במובייל */
+            .calendar-cell.padding-day {
+                display: none;
+            }
+
+            /* ימים רגילים ללא אירוע - מכווצים */
+            .calendar-cell:not(.has-event) {
+                height: 40px;
+                color: #cbd5e1;
+                background-color: #ffffff;
+                justify-content: flex-start;
+                font-size: 0.8rem;
+            }
+
+            /* ימים עם אירוע - מובלטים */
+            .calendar-cell.has-event {
+                min-height: 90px;
+                border-left-width: 6px; /* פס צבע בצד */
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+                position: relative;
+                z-index: 10;
+                margin-bottom: 0.5rem;
+                margin-top: 0.5rem;
+            }
+
+            /* אלמנטים שרואים רק בדסקטופ */
+            .desktop-view-content {
+                display: none;
             }
         }
     </style>
@@ -185,52 +272,71 @@
                 }
             ];
 
-            // Calendar Logic for March 2025
-            // March 1st 2025 is a Saturday.
-            // 0=Sun, 1=Mon, ..., 6=Sat
             const startDayOfWeek = 6; 
             const daysInMarch = 31;
             const weekDays = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
 
             const renderCalendar = () => {
                 const days = [];
-                // Padding for empty days at start
+                // Padding for empty days at start (Only relevant for Desktop Grid)
                 for (let i = 0; i < startDayOfWeek; i++) {
-                    days.push(<div key={`empty-${i}`} className="calendar-cell bg-slate-50/50"></div>);
+                    days.push(
+                        <div key={`empty-${i}`} className="calendar-cell padding-day bg-slate-50/50"></div>
+                    );
                 }
                 
                 // Actual days
                 for (let day = 1; day <= daysInMarch; day++) {
                     const workshop = workshops.find(w => w.day === day);
+                    const hasEvent = !!workshop;
+                    
                     days.push(
                         <div 
                             key={`day-${day}`} 
                             onClick={() => workshop && setSelectedWorkshop(workshop)}
-                            className={`calendar-cell p-1 sm:p-2 relative flex flex-col justify-between transition-all duration-200 
-                                ${workshop ? 'cursor-pointer hover:bg-slate-50 border-2 border-transparent hover:border-blue-200' : ''}
-                                ${workshop ? '' : 'text-slate-400'}
+                            className={`calendar-cell 
+                                ${hasEvent ? 'has-event cursor-pointer' : ''}
                             `}
-                            style={workshop ? { backgroundColor: `${workshop.color}08` } : {}}
+                            style={hasEvent ? { borderColor: workshop.color } : {}}
                         >
-                            <span className={`text-sm font-semibold mb-1 ${workshop ? 'text-slate-800' : ''}`}>{day}</span>
+                            {/* Day Number */}
+                            <span className={`text-sm font-bold ${hasEvent ? 'text-slate-800' : ''} ml-2 md:ml-0 md:mb-1`}>
+                                {day}
+                            </span>
                             
+                            {/* Desktop View Content */}
                             {workshop && (
-                                <div className="flex flex-col flex-grow justify-center items-center text-center">
-                                    {/* Icon circle */}
+                                <div className="desktop-view-content flex flex-col flex-grow justify-center items-center text-center w-full">
                                     <div 
-                                        className="w-8 h-8 rounded-full flex items-center justify-center text-white shadow-sm mb-1 sm:mb-2"
+                                        className="w-8 h-8 rounded-full flex items-center justify-center text-white shadow-sm mb-2"
                                         style={{backgroundColor: workshop.color}}
                                     >
                                         {workshop.icon}
                                     </div>
-                                    
-                                    {/* Title - Visible mostly on desktop, truncated on mobile */}
-                                    <span className="hidden sm:block text-xs font-bold leading-tight px-1 text-slate-800 line-clamp-2">
+                                    <span className="text-xs font-bold leading-tight px-1 text-slate-800 line-clamp-2">
                                         {workshop.title}
                                     </span>
-                                    
-                                    {/* Mobile Indicator */}
-                                    <span className="sm:hidden w-1.5 h-1.5 rounded-full" style={{backgroundColor: workshop.color}}></span>
+                                </div>
+                            )}
+
+                            {/* Mobile View Content - Title next to date */}
+                            {workshop && (
+                                <div className="mobile-view-content flex items-center gap-3 w-full pr-2">
+                                    <div 
+                                        className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white shadow-sm"
+                                        style={{backgroundColor: workshop.color}}
+                                    >
+                                        {workshop.icon}
+                                    </div>
+                                    <div className="flex flex-col text-right">
+                                        <span className="text-sm font-bold text-slate-800 leading-tight">
+                                            {workshop.title}
+                                        </span>
+                                        <span className="text-xs text-slate-500">
+                                            {workshop.time}
+                                        </span>
+                                    </div>
+                                    <ChevronRight className="w-4 h-4 text-slate-300 mr-auto" />
                                 </div>
                             )}
                         </div>
@@ -243,20 +349,15 @@
             const addToCalendar = (workshop) => {
                 const year = 2025;
                 const [day, month] = workshop.date.split('.');
-                
-                // Normalize time string (handle en-dash)
                 const times = workshop.time.replace('–', '-').split('-');
                 const startStr = times[0].trim();
                 const endStr = times[1].trim();
-
                 const formatDate = (dateDay, dateMonth, timeStr) => {
                     const [hh, mm] = timeStr.split(':');
                     return `${year}${dateMonth.padStart(2, '0')}${dateDay.padStart(2, '0')}T${hh}${mm}00`;
                 };
-
                 const start = formatDate(day, month, startStr);
                 const end = formatDate(day, month, endStr);
-
                 const icsContent = [
                     'BEGIN:VCALENDAR',
                     'VERSION:2.0',
@@ -269,7 +370,6 @@
                     'END:VEVENT',
                     'END:VCALENDAR'
                 ].join('\n');
-
                 const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
                 const link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
@@ -413,10 +513,10 @@
                         </div>
 
                         {/* Calendar Grid Container */}
-                        <div className="bg-white p-4 rounded-3xl shadow-xl border border-slate-100">
+                        <div className="calendar-wrapper">
                             
                             {/* Weekday Headers */}
-                            <div className="grid grid-cols-7 mb-2 text-center">
+                            <div className="calendar-header-row">
                                 {weekDays.map((day, i) => (
                                     <div key={i} className="text-sm font-bold text-slate-400 py-2">
                                         {day}
@@ -440,19 +540,19 @@
                 {selectedWorkshop && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
                     <div 
-                        className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 relative"
+                        className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 relative flex flex-col max-h-[90vh]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header with Color */}
-                        <div className="h-32 relative flex items-end p-8" style={{backgroundColor: selectedWorkshop.color}}>
+                        <div className="h-28 md:h-32 relative flex-shrink-0 flex items-end p-6 md:p-8" style={{backgroundColor: selectedWorkshop.color}}>
                             <button 
                                 onClick={() => setSelectedWorkshop(null)}
-                                className="absolute top-4 left-4 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
+                                className="absolute top-4 left-4 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors z-20"
                             >
                                 <X className="w-6 h-6" />
                             </button>
                             <div className="text-white relative z-10 translate-y-4">
-                                <div className="flex items-center gap-3 mb-2 opacity-90 text-sm font-medium">
+                                <div className="flex flex-wrap items-center gap-3 mb-2 opacity-90 text-sm font-medium">
                                     <span className="bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm flex items-center gap-2">
                                         <Calendar className="w-3 h-3" /> {selectedWorkshop.date}
                                     </span>
@@ -460,17 +560,17 @@
                                         <Clock className="w-3 h-3" /> {selectedWorkshop.time}
                                     </span>
                                 </div>
-                                <h2 className="text-2xl md:text-3xl font-bold">{selectedWorkshop.title}</h2>
+                                <h2 className="text-xl md:text-3xl font-bold pr-1">{selectedWorkshop.title}</h2>
                             </div>
                             {/* Decor */}
                             <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                         </div>
 
-                        {/* Body */}
-                        <div className="p-8 pt-10">
+                        {/* Body - Scrollable */}
+                        <div className="p-6 md:p-8 pt-10 overflow-y-auto">
                             <div className="flex items-start justify-between mb-6">
                                 <div>
-                                    <h3 className="text-xl font-semibold text-slate-800 mb-1">{selectedWorkshop.subtitle}</h3>
+                                    <h3 className="text-lg md:text-xl font-semibold text-slate-800 mb-1">{selectedWorkshop.subtitle}</h3>
                                     {selectedWorkshop.instructor && (
                                         <div className="flex items-center gap-2 text-sm text-slate-500 mt-2">
                                             <User className="w-4 h-4" />
@@ -484,7 +584,7 @@
                             </div>
 
                             <div className="prose prose-slate max-w-none mb-8">
-                                <p className="text-slate-600 leading-relaxed text-lg">
+                                <p className="text-slate-600 leading-relaxed text-base md:text-lg">
                                     {selectedWorkshop.description}
                                 </p>
                             </div>
@@ -509,11 +609,11 @@
                             )}
                         </div>
                         
-                        {/* Footer Actions */}
-                        <div className="bg-slate-50 p-4 border-t border-slate-100 flex flex-wrap justify-between items-center gap-4">
+                        {/* Footer Actions - Sticky bottom of modal */}
+                        <div className="bg-slate-50 p-4 border-t border-slate-100 flex-shrink-0 flex flex-wrap justify-between items-center gap-4">
                             <button 
                                 onClick={() => addToCalendar(selectedWorkshop)}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm group"
+                                className="flex items-center justify-center gap-2 px-5 py-3 w-full md:w-auto rounded-xl bg-white border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm group"
                             >
                                 <CalendarPlus className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
                                 הוספה ליומן (Outlook)
@@ -521,7 +621,7 @@
 
                             <button 
                                 onClick={() => setSelectedWorkshop(null)}
-                                className="px-6 py-2 rounded-lg text-slate-500 hover:text-slate-800 font-medium transition-colors"
+                                className="px-6 py-2 w-full md:w-auto rounded-lg text-slate-500 hover:text-slate-800 font-medium transition-colors"
                             >
                                 סגירה
                             </button>
