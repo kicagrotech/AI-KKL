@@ -12,6 +12,28 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
         body { font-family: 'Heebo', sans-serif; }
+        .spring-gradient {
+            background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
+        }
+        /* התאמה אישית ללוח שנה */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #e2e8f0;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .calendar-cell {
+            background-color: white;
+            min-height: 100px;
+        }
+        @media (max-width: 768px) {
+            .calendar-cell {
+                min-height: 80px;
+            }
+        }
     </style>
 
     <!-- הגדרת Import Map כדי לטעון ספריות React ישירות בדפדפן -->
@@ -53,13 +75,16 @@
             ChevronRight,
             ArrowLeft,
             AlertCircle,
-            CalendarPlus
+            CalendarPlus,
+            Leaf,
+            CheckCircle2
         } from 'lucide-react';
 
         const KKLWorkshopSchedule = () => {
             const [selectedWorkshop, setSelectedWorkshop] = useState(null);
 
             const registrationLink = "https://forms.gle/HfXYAewwxAFuNNp49";
+            const kklLogoUrl = "https://upload.wikimedia.org/wikipedia/he/thumb/2/27/KakalLogo.svg/250px-KakalLogo.svg.png";
 
             // KKL Brand Colors
             const colors = {
@@ -74,44 +99,48 @@
                 {
                     id: 1,
                     date: "9.3",
+                    day: 9,
                     time: "10:30–12:00",
-                    title: "יסודות ה-GenAI לעובדים",
-                    subtitle: "עבודה חכמה מהיום הראשון",
-                    description: "היכרות ממוקדת עם בינה מלאכותית יוצרת, התאמה אישית של כלי AI לסגנון ולתפקיד, ועקרונות הנדסת פרומפטים לתוצאות מדויקות. בניית תבניות עבודה אישיות לכל משתתף.",
-                    icon: <Sparkles className="w-8 h-8" />,
+                    title: "בינה מלאכותית – להבין בלי לפחד",
+                    subtitle: "מה זה בכלל AI ואיך זה עוזר לי?",
+                    description: "מה זה בכלל AI ואיך זה עוזר לי בעבודה? במפגש נבין בשפה פשוטה: מהי בינה מלאכותית באמת (בלי מילים טכניות), איך היא כבר משפיעה על עולם העבודה, ואיך אפשר להשתמש בה לכתיבה, ניסוח, סיכומים ורעיונות. נדבר גם על מה מותר ומה אסור לעבודה נכונה ובטוחה. זהו מפגש שייתן ביטחון ויעשה סדר – בלי צורך ברקע טכנולוגי.",
+                    icon: <Sparkles className="w-5 h-5" />,
                     color: colors.blue,
                     platforms: ["ChatGPT", "Claude", "Gemini"]
                 },
                 {
                     id: 2,
                     date: "12.3",
+                    day: 12,
                     time: "10:30–12:00",
-                    title: "מצגות חכמות בדקות",
-                    subtitle: "ממצב רעיון למצגת מוכנה",
-                    description: "יצירת מצגות בעזרת AI, הפקת תוכן ממקורות, בניית שקפים אוטומטית ושדרוג מסרים מקצועיים לרמה הגבוהה ביותר.",
-                    icon: <Presentation className="w-8 h-8" />,
+                    title: "מצגות ופרזנטציה",
+                    subtitle: "חצי מהזמן, תוצאה כפולה",
+                    description: "להכין מצגת מקצועית בלי לשבת שעות. נלמד איך להפוך רעיון למצגת מסודרת תוך דקות, לקבל הצעות לניסוח ברור ומשכנע, ולבנות מבנה נכון להצגה מול הנהלה או צוות. נקבל כלים שיעזרו לשדר ביטחון גם אם אתם לא אוהבים להציג. כי מצגת טובה לא צריכה לקחת ערב שלם.",
+                    icon: <Presentation className="w-5 h-5" />,
                     color: colors.green,
-                    platforms: ["Gemini", "NotebookLM", "Gamma"]
+                    platforms: ["Gemini", "Gamma", "Slides AI"]
                 },
                 {
                     id: 3,
                     date: "15.3",
+                    day: 15,
                     time: "10:30–12:00",
-                    title: "אקסל ו-AI",
-                    subtitle: "ניתוח נתונים בטוח ומהיר",
-                    description: "ניתוח קבצי אקסל, נוסחאות והסקת תובנות עם AI, עבודה בסביבת Copilot 365, כללי פרטיות ואבטחת מידע בעבודה עם נתונים ארגוניים.",
-                    icon: <TableProperties className="w-8 h-8" />,
+                    title: "בינה מלאכותית ואקסלים",
+                    subtitle: "העוזר האישי החדש שלכם",
+                    description: "וורד, אקסל, אאוטלוק – אבל חכם יותר. נראה איך AI יכול לנסח מיילים מקצועיים בלחיצת כפתור, לסכם מסמכים ארוכים, לנתח נתונים באקסל בקלות ולהכין טיוטות, דוחות וסיכומים במהירות. כלים קטנים שחוסכים שעות עבודה.",
+                    icon: <TableProperties className="w-5 h-5" />,
                     color: colors.brown,
                     platforms: ["ChatGPT", "Microsoft Copilot"]
                 },
                 {
                     id: 4,
                     date: "19.3",
+                    day: 19,
                     time: "10:30–12:00",
-                    title: "יצירתיות עם AI",
-                    subtitle: "תמונה, וידאו ומוזיקה",
-                    description: "יצירת נכסים ויזואליים וקוליים בעזרת כלי AI, שימושים להדרכה, הסברה ושיווק פנים ארגוני.",
-                    icon: <Music className="w-8 h-8" />,
+                    title: "יצירת תמונות, וידאו ומוזיקה",
+                    subtitle: "בלי להיות מעצב",
+                    description: "רוצים פוסטר לאירוע? סרטון הסברה? תמונה למצגת? נלמד איך ליצור תמונות מותאמות אישית לפי רעיון, סרטונים קצרים ומרשימים ומוזיקה מקורית לרקע או לאירועים. חומרים ויזואליים שמושכים תשומת לב. לא צריך ידע גרפי – רק רעיון.",
+                    icon: <Music className="w-5 h-5" />,
                     color: "#FF4081", // Pink for creative
                     instructor: "קווין ליאקס",
                     platforms: ["Midjourney", "Suno", "Runway"]
@@ -119,11 +148,12 @@
                 {
                     id: 5,
                     date: "23.3",
+                    day: 23,
                     time: "10:30–12:00",
-                    title: "אוטומציה חכמה",
-                    subtitle: "חיסכון בזמן ושדרוג תהליכים",
-                    description: "זיהוי תהליכים מתאימים לאוטומציה, בניית זרימות עבודה מבוססות AI, דוגמאות יישום בצוותים ארגוניים לחיסכון משמעותי בזמן.",
-                    icon: <Cpu className="w-8 h-8" />,
+                    title: "אוטומציה",
+                    subtitle: "לתת למחשב לעשות את העבודה השחורה",
+                    description: "פחות פעולות חוזרות, יותר זמן לדברים חשובים. נבין איך אפשר לייצר תהליכים אוטומטיים, לחסוך הקלדות חוזרות, לייעל תהליכי עבודה משרדיים ולצמצם טעויות אנוש. יותר יעילות, פחות עומס.",
+                    icon: <Cpu className="w-5 h-5" />,
                     color: colors.blue,
                     instructor: "קווין ליאקס",
                     platforms: ["Make", "Zapier"]
@@ -131,11 +161,12 @@
                 {
                     id: 6,
                     date: "26.3",
+                    day: 26,
                     time: "10:30–12:00",
-                    title: "סוכני AI ופיתוח מונחה קוד",
-                    subtitle: "לעובדים מתקדמים",
-                    description: "היכרות עם סוכני AI, עבודה עם Claude Code, בניית תהליכי עבודה חצי אוטונומיים למשתמשים שרוצים לקחת את הטכנולוגיה לקצה.",
-                    icon: <Bot className="w-8 h-8" />,
+                    title: "סוכני AI",
+                    subtitle: "עובדים דיגיטליים לצידכם",
+                    description: "מה אם היה לכם עוזר שעובד 24/7? נכיר את הדור הבא: כלים שיכולים לבצע משימות עבורכם, חיפוש מידע חכם וממוקד, ובניית תהליכים חצי-אוטומטיים. נכיר עוזרים דיגיטליים שמבינים הקשר ונקבל הצצה לעולם העבודה של המחר.",
+                    icon: <Bot className="w-5 h-5" />,
                     color: colors.green,
                     instructor: "קווין ליאקס",
                     platforms: ["Claude Code", "Replit"]
@@ -143,15 +174,70 @@
                 {
                     id: 7,
                     date: "30.3",
+                    day: 30,
                     time: "10:30–12:00",
-                    title: "AI בעבודה היומיומית בקק״ל",
-                    subtitle: "סיכום ויישום מעשי",
-                    description: "שימוש מעשי ב-Copilot ככלי ארגוני, שדרוג מסמכים, מיילים ומצגות, דפוסי עבודה מומלצים לארגון וטיפים להמשך הדרך.",
-                    icon: <Briefcase className="w-8 h-8" />,
+                    title: "CoPilot",
+                    subtitle: "שותף חכם בתוך האופיס",
+                    description: "העוזר החדש בתוך Word, Excel ו-Outlook. נראה איך CoPilot כותב טיוטות מסודרות, מסכם פגישות, מנתח נתונים ומשפר ניסוחים. חוסך זמן בכל יום עבודה. זה לא תחליף לכם – זה חיזוק.",
+                    icon: <Briefcase className="w-5 h-5" />,
                     color: colors.brown,
                     platforms: ["Microsoft Copilot", "Office 365"]
                 }
             ];
+
+            // Calendar Logic for March 2025
+            // March 1st 2025 is a Saturday.
+            // 0=Sun, 1=Mon, ..., 6=Sat
+            const startDayOfWeek = 6; 
+            const daysInMarch = 31;
+            const weekDays = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
+
+            const renderCalendar = () => {
+                const days = [];
+                // Padding for empty days at start
+                for (let i = 0; i < startDayOfWeek; i++) {
+                    days.push(<div key={`empty-${i}`} className="calendar-cell bg-slate-50/50"></div>);
+                }
+                
+                // Actual days
+                for (let day = 1; day <= daysInMarch; day++) {
+                    const workshop = workshops.find(w => w.day === day);
+                    days.push(
+                        <div 
+                            key={`day-${day}`} 
+                            onClick={() => workshop && setSelectedWorkshop(workshop)}
+                            className={`calendar-cell p-1 sm:p-2 relative flex flex-col justify-between transition-all duration-200 
+                                ${workshop ? 'cursor-pointer hover:bg-slate-50 border-2 border-transparent hover:border-blue-200' : ''}
+                                ${workshop ? '' : 'text-slate-400'}
+                            `}
+                            style={workshop ? { backgroundColor: `${workshop.color}08` } : {}}
+                        >
+                            <span className={`text-sm font-semibold mb-1 ${workshop ? 'text-slate-800' : ''}`}>{day}</span>
+                            
+                            {workshop && (
+                                <div className="flex flex-col flex-grow justify-center items-center text-center">
+                                    {/* Icon circle */}
+                                    <div 
+                                        className="w-8 h-8 rounded-full flex items-center justify-center text-white shadow-sm mb-1 sm:mb-2"
+                                        style={{backgroundColor: workshop.color}}
+                                    >
+                                        {workshop.icon}
+                                    </div>
+                                    
+                                    {/* Title - Visible mostly on desktop, truncated on mobile */}
+                                    <span className="hidden sm:block text-xs font-bold leading-tight px-1 text-slate-800 line-clamp-2">
+                                        {workshop.title}
+                                    </span>
+                                    
+                                    {/* Mobile Indicator */}
+                                    <span className="sm:hidden w-1.5 h-1.5 rounded-full" style={{backgroundColor: workshop.color}}></span>
+                                </div>
+                            )}
+                        </div>
+                    );
+                }
+                return days;
+            };
 
             // Function to generate and download ICS file for Outlook
             const addToCalendar = (workshop) => {
@@ -201,15 +287,9 @@
                     <div className="container mx-auto px-6 py-3 flex justify-between items-center">
                         <div className="flex items-center gap-4">
                             <img 
-                            src="https://www.kkl.org.il/files/general/01012025Logo.png" 
+                            src={kklLogoUrl}
                             alt="KKL JNF Logo" 
                             className="h-12 w-auto object-contain"
-                            />
-                            <div className="h-8 w-px bg-slate-200 mx-2 hidden sm:block"></div>
-                            <img 
-                            src="https://static.wixstatic.com/media/4aa83a_8834f96f383f4ae0b877d496085d8053~mv2.png" 
-                            alt="Kinneret Innovation Center" 
-                            className="h-10 w-auto object-contain"
                             />
                         </div>
                         <a 
@@ -225,7 +305,7 @@
                 </nav>
 
                 {/* Hero Section */}
-                <header className="pt-28 pb-16 bg-white relative overflow-hidden">
+                <header className="pt-28 pb-10 bg-white relative overflow-hidden">
                     <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center gap-12">
                         
@@ -240,7 +320,8 @@
                         </h1>
                         <p className="text-lg text-slate-600 mb-6 leading-relaxed">
                             סדרת מפגשים מעשית שתעניק לכם ארגז כלים טכנולוגי מתקדם.
-                            מייעול העבודה השוטפת ועד ליצירתיות פורצת דרך.
+                            <br/>
+                            <span className="font-bold text-slate-800">מהתייעלות ועד יצירתיות פורצת דרך.</span>
                         </p>
 
                         {/* Limited Spots Badge */}
@@ -249,87 +330,109 @@
                             שימו לב: מספר המקומות בסדנה מוגבל!
                         </div>
                         
-                        {/* Presenter Mini-Profile */}
-                        <div className="flex items-center gap-4 bg-slate-50 p-3 rounded-2xl border border-slate-100 inline-flex w-full md:w-auto">
-                            <img 
-                                src="https://res.cloudinary.com/dhzuwoech/image/upload/v1770584538/580669370_10239655425541264_8727551209985263451_n_ttstau.jpg" 
-                                alt="Tal Hakuk" 
-                                className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
-                            />
-                            <div className="text-right">
-                                <div className="font-bold text-slate-800 text-sm">טל חקוקי</div>
-                                <div className="text-xs text-slate-500">מנהל תחום GenAI, מרכז כנרת לחדשנות</div>
-                            </div>
-                        </div>
                         </div>
 
-                        <div className="md:w-1/2 relative">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-green-100 rounded-[2rem] transform rotate-3 blur-2xl opacity-40"></div>
-                        <img 
-                            src="https://res.cloudinary.com/dhzuwoech/image/upload/v1770584538/580669370_10239655425541264_8727551209985263451_n_ttstau.jpg" 
-                            alt="Hero" 
-                            className="relative rounded-[2rem] shadow-2xl w-full object-cover h-64 md:h-80 border-4 border-white"
-                        />
+                        <div className="md:w-1/2 relative flex justify-center">
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-green-100 rounded-[2rem] transform rotate-3 blur-2xl opacity-40"></div>
+                            <div className="relative bg-white rounded-[2rem] shadow-xl p-8 border-4 border-white/50 w-full h-64 md:h-80 flex items-center justify-center">
+                                <img 
+                                    src={kklLogoUrl}
+                                    alt="KKL Logo" 
+                                    className="w-full h-full object-contain"
+                                />
+                            </div>
                         </div>
 
                     </div>
                     </div>
                 </header>
 
-                {/* Course Grid */}
+                {/* Spring/Intro Section - "בינה בכל פינה" */}
+                <section className="py-12 spring-gradient border-y border-slate-200">
+                    <div className="container mx-auto px-6">
+                        <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-sm border border-white/50">
+                            <div className="flex flex-col md:flex-row gap-8 items-start">
+                                <div className="flex-1">
+                                    <h2 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <Leaf className="w-6 h-6 text-green-600" />
+                                        בינה בכל פינה – אביב של חדשנות
+                                    </h2>
+                                    <div className="prose prose-slate text-slate-600 leading-relaxed">
+                                        <p className="mb-4">
+                                            לקראת עונת האביב, כשכולם באווירת התחדשות וצמיחה –
+                                            אנחנו פותחים בקרן קימת לישראל חודש מיוחד שכולו בינה מלאכותית.
+                                            זו ההזדמנות לעצור לרגע, להתחדש בכלים חכמים,
+                                            ולגלות איך אפשר להפוך את שגרת העבודה לפשוטה, מהירה ויעילה יותר.
+                                        </p>
+                                        <p className="mb-4 font-medium text-slate-800">
+                                            לעבוד חכם יותר. ליצור מהר יותר. להתקדם בקלות.
+                                        </p>
+                                        <p>
+                                            הבינה המלאכותית כבר כאן, והיא לא מיועדת רק לאנשי מחשבים.
+                                            במהלך החודש נחשף לכלים פרקטיים ופשוטים ליישום,
+                                            לכתיבת מיילים, מצגות, סיכומים ורעיונות – ובעיקר לחיסכון בזמן יקר.
+                                            אביב של חדשנות מתחיל עכשיו 🌸
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div className="md:w-1/3 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                    <h3 className="font-bold text-slate-800 mb-4 text-lg">למה כדאי להשתתף?</h3>
+                                    <ul className="space-y-3">
+                                        {[
+                                            "לא צריך ידע מוקדם",
+                                            "כלים מעשיים לשימוש יומיומי",
+                                            "חיסכון בזמן ועומס",
+                                            "שיפור איכות התוצרים",
+                                            "התאמה לעולם העבודה המשתנה"
+                                        ].map((benefit, idx) => (
+                                            <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
+                                                <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                                <span>{benefit}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Calendar Section */}
                 <section className="py-16 bg-slate-50 relative">
                     <div className="container mx-auto px-6">
-                    <div className="flex items-center justify-between mb-10">
-                        <div>
-                            <h2 className="text-3xl font-bold text-slate-800">תכנית המפגשים</h2>
-                            <div className="w-16 h-1 bg-green-500 mt-2 rounded-full"></div>
-                        </div>
-                        <div className="hidden md:flex gap-2 text-sm font-medium text-slate-500">
-                            <Calendar className="w-4 h-4" />
-                            <span>מרץ 2025</span>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {workshops.map((workshop) => (
-                        <div 
-                            key={workshop.id}
-                            onClick={() => setSelectedWorkshop(workshop)}
-                            className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border border-slate-100 relative overflow-hidden flex flex-col justify-between h-[280px]"
-                        >
-                            {/* Top Border Color */}
-                            <div className="absolute top-0 left-0 w-full h-1.5" style={{backgroundColor: workshop.color}}></div>
-                            
+                        <div className="flex items-center justify-between mb-8">
                             <div>
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="bg-slate-50 p-3 rounded-xl group-hover:bg-slate-100 transition-colors" style={{color: workshop.color}}>
-                                    {workshop.icon}
-                                </div>
-                                <div className="bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                    {workshop.date}
-                                </div>
+                                <h2 className="text-3xl font-bold text-slate-800">לוח אירועים</h2>
+                                <div className="w-16 h-1 bg-green-500 mt-2 rounded-full"></div>
                             </div>
-
-                            <h3 className="text-xl font-bold text-slate-800 leading-tight mb-2 group-hover:text-blue-700 transition-colors">
-                                {workshop.title}
-                            </h3>
-                            <p className="text-sm text-slate-500 font-medium line-clamp-2">
-                                {workshop.subtitle}
-                            </p>
-                            </div>
-
-                            <div className="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
-                                <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                                    <Clock className="w-3.5 h-3.5" />
-                                    {workshop.time}
-                                </div>
-                                <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-all">
-                                    <ChevronRight className="w-4 h-4" />
-                                </div>
+                            <div className="flex gap-2 items-center bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
+                                <Calendar className="w-5 h-5 text-blue-600" />
+                                <span className="font-bold text-slate-700">מרץ 2025</span>
                             </div>
                         </div>
-                        ))}
-                    </div>
+
+                        {/* Calendar Grid Container */}
+                        <div className="bg-white p-4 rounded-3xl shadow-xl border border-slate-100">
+                            
+                            {/* Weekday Headers */}
+                            <div className="grid grid-cols-7 mb-2 text-center">
+                                {weekDays.map((day, i) => (
+                                    <div key={i} className="text-sm font-bold text-slate-400 py-2">
+                                        {day}
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Days Grid */}
+                            <div className="calendar-grid">
+                                {renderCalendar()}
+                            </div>
+                        </div>
+                        
+                        <div className="text-center mt-6 text-slate-500 text-sm">
+                            * לחצו על תאריך מסומן לפרטים מלאים
+                        </div>
                     </div>
                 </section>
 
@@ -357,7 +460,7 @@
                                         <Clock className="w-3 h-3" /> {selectedWorkshop.time}
                                     </span>
                                 </div>
-                                <h2 className="text-3xl font-bold">{selectedWorkshop.title}</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold">{selectedWorkshop.title}</h2>
                             </div>
                             {/* Decor */}
                             <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
@@ -447,7 +550,6 @@
                         </a>
                         <div className="mt-12 pt-8 border-t border-slate-800 flex justify-center gap-8 opacity-50 text-sm">
                             <span>© כל הזכויות שמורות לקק"ל</span>
-                            <span>מרכז כנרת לחדשנות</span>
                         </div>
                     </div>
                 </footer>
