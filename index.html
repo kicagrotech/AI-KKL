@@ -167,7 +167,7 @@
         import { 
             Sparkles, Presentation, TableProperties, Music, Cpu, Bot, Briefcase,
             Calendar, Clock, X, User, Layers, ChevronRight, ArrowLeft, 
-            CalendarPlus, Leaf, Zap, TrendingUp, Award, Users
+            CalendarPlus, Leaf, Zap, TrendingUp, Award, Users, AlertCircle
         } from 'lucide-react';
 
         const KKLInnovationMonth = () => {
@@ -187,7 +187,7 @@
             const workshops = [
                 {
                     id: 1, date: "9.3", day: 9, time: "10:30–12:00",
-                    title: "בינה מלאכותית – להבין בלי לפחד",
+                    title: "היכרות עם כלי בינה מלאכותית",
                     subtitle: "מה זה בכלל AI ואיך זה עוזר לי?",
                     description: "מה זה בכלל AI ואיך זה עוזר לי בעבודה? במפגש נבין בשפה פשוטה: מהי בינה מלאכותית באמת (בלי מילים טכניות), איך היא כבר משפיעה על עולם העבודה, ואיך אפשר להשתמש בה לכתיבה, ניסוח, סיכומים ורעיונות. נדבר גם על מה מותר ומה אסור לעבודה נכונה ובטוחה. זהו מפגש שייתן ביטחון ויעשה סדר – בלי צורך ברקע טכנולוגי.",
                     icon: <Sparkles className="w-5 h-5" />, color: colors.blue,
@@ -235,7 +235,7 @@
                 },
                 {
                     id: 7, date: "30.3", day: 30, time: "10:30–12:00",
-                    title: "קופיילוט העוזר החכם שלכם בתוך אופיס",
+                    title: "Copilot העוזר החכם שלכם בתוך אופיס",
                     subtitle: "שותף לעבודה היומיומית",
                     description: "העוזר החדש בתוך Word, Excel ו-Outlook. נראה איך CoPilot כותב טיוטות מסודרות, מסכם פגישות, מנתח נתונים ומשפר ניסוחים. חוסך זמן בכל יום עבודה. זה לא תחליף לכם – זה חיזוק.",
                     icon: <Briefcase className="w-5 h-5" />, color: colors.brown,
@@ -243,7 +243,7 @@
                 }
             ];
 
-            const startDayOfWeek = 6; 
+            const startDayOfWeek = 0; 
             const daysInMarch = 31;
             const weekDays = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
 
@@ -315,7 +315,7 @@
             };
 
             const addToCalendar = (workshop) => {
-                const year = 2025;
+                const year = 2026;
                 const [day, month] = workshop.date.split('.');
                 const times = workshop.time.replace('–', '-').split('-');
                 const formatDate = (d, m, t) => {
@@ -380,6 +380,12 @@
                                 </span>
                             </h1>
 
+                            {/* Limited Spots Badge */}
+                            <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-red-500/20 border border-red-500/50 text-red-300 font-bold text-lg mb-8 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]">
+                                <AlertCircle className="w-5 h-5" />
+                                מספר המקומות מוגבל - מהרו להירשם!
+                            </div>
+
                             <div className="max-w-3xl mx-auto glass-card rounded-2xl p-6 md:p-8 mb-10 shadow-2xl">
                                 <div className="text-lg md:text-xl text-slate-200 leading-relaxed font-light">
                                     לקראת עונת האביב, כשכולם באווירת התחדשות וצמיחה – אנחנו פותחים בקרן קימת לישראל חודש מיוחד שכולו בינה מלאכותית. 
@@ -427,7 +433,7 @@
                                     לוח המפגשים
                                 </h2>
                                 <div className="bg-white/10 border border-white/20 px-4 py-2 rounded-full font-mono text-blue-300">
-                                    MARCH 2025
+                                    MARCH 2026
                                 </div>
                             </div>
 
